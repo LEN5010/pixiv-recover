@@ -38,3 +38,7 @@ python .\pixiv_recover.py 123456789 --minute 2026-01-02T20:08
 ## 许可证
 
 [GNU General Public License v3.0 only](LICENSE)。
+
+
+## 友情链接
+Community: [LINUX DO](https://linux.do/)
