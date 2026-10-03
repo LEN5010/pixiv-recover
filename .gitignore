@@ -6,3 +6,5 @@ recovered/
 venv/
 .idea/
 .vscode/
+dist/
+build/

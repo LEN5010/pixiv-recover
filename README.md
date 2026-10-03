@@ -26,6 +26,33 @@ python .\pixiv_recover.py 123456789 --minute 2026-01-02T20:08
 
 默认保存至 `recovered/`。运行 `python .\pixiv_recover.py --help` 查看并发数、输出目录、页数和超时等选项。
 
+## Go 版本（无需 Python）
+
+现在也提供 Go 版本，不需要安装 Python。到 [Releases](https://github.com/LEN5010/pixiv-recover/releases) 下载对应系统的程序（Windows / macOS / Linux，amd64 与 arm64），解压后运行：
+
+```powershell
+pixiv-recover 作品ID
+```
+
+```powershell
+pixiv-recover 123456789 --minute 2026-01-02T20:08
+```
+
+不带参数运行（例如在 Windows 上直接双击 `pixiv-recover.exe`）会进入交互模式，按提示逐个输入作品 ID 即可。
+如果作品本身仍可访问，Go 版会直接下载元数据给出的原图，不再枚举时间戳。运行 `pixiv-recover --help` 查看全部选项。
+
+Go 版由 @ts8zs 移植（[#1](https://github.com/LEN5010/pixiv-recover/issues/1)）。
+
+从源码构建（需要 Go 1.22 或更高版本）：
+
+```powershell
+go build ./cmd/pixiv-recover
+```
+
+Releases 中同时附带 Python 版压缩包 `pixiv-recover-python_<版本>.zip`（含 `pixiv_recover.py`、README 和 LICENSE）。
+
+维护者发布新版本：推送形如 `v1.0.0` 的标签，GitHub Actions 会自动构建各平台程序和 Python 版压缩包，并发布到 Releases。
+
 ## 限制与使用边界
 
 该方法只对 CDN 尚未清理、且文件名不含不可枚举哈希的近期作品有效。
