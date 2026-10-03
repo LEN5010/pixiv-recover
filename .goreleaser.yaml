@@ -1,0 +1,64 @@
+# GoReleaser v2 配置：推送 v* 标签后由 .github/workflows/release.yml 调用。
+# 本地试跑：goreleaser release --snapshot --clean
+version: 2
+
+project_name: pixiv-recover
+
+before:
+  hooks:
+    - go test ./...
+    # 打包 Python 版（pixiv_recover.py + README + LICENSE），作为额外附件上传。
+    - python3 -c "import os; os.makedirs('build', exist_ok=True)"
+    - python3 -m zipfile -c build/pixiv-recover-python_{{ .Version }}.zip pixiv_recover.py README.md LICENSE
+
+builds:
+  - id: pixiv-recover
+    main: ./cmd/pixiv-recover
+    binary: pixiv-recover
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+    goos:
+      - windows
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - id: go
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- if eq .Os "darwin" }}macOS{{ else }}{{ .Os }}{{ end }}_
+      {{- .Arch }}
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: checksums.txt
+  extra_files:
+    - glob: build/pixiv-recover-python_{{ .Version }}.zip
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+release:
+  extra_files:
+    - glob: build/pixiv-recover-python_{{ .Version }}.zip
